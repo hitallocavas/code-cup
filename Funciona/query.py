@@ -78,9 +78,9 @@ def query_execution(input_data, properties):
     print(target_host)
     target_host += input_data.get("cnpj")
     result = requests.get(target_host)
-    print ("TEXTO EM MAIUCULO")
-    print (result)
-    query_result.update(json.loads(result.content))
+    my_json = result.content.decode('utf-8').replace("'", '"')
+    query_result['result'] = my_json
+#    print(query_result)
 
     return query_result
 
@@ -111,8 +111,9 @@ def request(input_data, properties):
 def test_request():    
     # You can extend the properties from you file metadata
     my_test_properties = Utils.load_parameters(__file__)
-
-    result = request({"cnpj":"19823999000105"}, my_test_properties)
+    cnpjs = ["19823999000105", "60703923000131"]
+    for c in cnpjs:
+        result = request({"cnpj":c}, my_test_properties)
     assert type(my_test_properties) == dict
     # assert result["Nome de fantasia"] == "NEUROTECH"
 
